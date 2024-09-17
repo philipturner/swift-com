@@ -4,7 +4,6 @@
 import WinSDK
 
 @_fixed_layout
-@usableFromInline
 public final class IUnknownRef {
   public var pUnk: UnsafeMutablePointer<WinSDK.IUnknown>?
 
