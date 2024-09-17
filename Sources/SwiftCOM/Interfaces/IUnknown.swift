@@ -5,15 +5,15 @@ import WinSDK
 
 @_fixed_layout
 @usableFromInline
-final class IUnknownRef {
-  private var pUnk: UnsafeMutablePointer<WinSDK.IUnknown>?
+public final class IUnknownRef {
+  public var pUnk: UnsafeMutablePointer<WinSDK.IUnknown>?
 
-  init(_ pUnk: UnsafeMutablePointer<WinSDK.IUnknown>?) {
+  public init(_ pUnk: UnsafeMutablePointer<WinSDK.IUnknown>?) {
     self.pUnk = pUnk
     _ = self.pUnk?.pointee.lpVtbl.pointee.AddRef(self.pUnk)
   }
 
-  init(consuming pUnk: UnsafeMutablePointer<WinSDK.IUnknown>?) {
+  public init(consuming pUnk: UnsafeMutablePointer<WinSDK.IUnknown>?) {
     self.pUnk = pUnk
   }
 
@@ -21,11 +21,11 @@ final class IUnknownRef {
     _ = self.pUnk?.pointee.lpVtbl.pointee.Release(self.pUnk)
   }
 
-  var borrow: UnsafeMutablePointer<WinSDK.IUnknown>? {
+  public var borrow: UnsafeMutablePointer<WinSDK.IUnknown>? {
     return self.pUnk
   }
 
-  var ref: UnsafeMutablePointer<WinSDK.IUnknown>? {
+  public var ref: UnsafeMutablePointer<WinSDK.IUnknown>? {
     _ = self.pUnk?.pointee.lpVtbl.pointee.AddRef(self.pUnk)
     return self.pUnk
   }
@@ -35,7 +35,7 @@ final class IUnknownRef {
 /// the `QueryInterface` method, and manage the existence of the object through
 /// the `AddRef` and `Release` methods.
 open class IUnknown {
-  internal let pUnk: IUnknownRef
+  public let pUnk: IUnknownRef
 
   /// Interface ID
   open class var IID: IID { IID_IUnknown }
@@ -89,8 +89,8 @@ extension IUnknown {
 }
 
 extension IUnknown {
-  func perform<Type, ResultType>(as type: Type.Type,
-                                 _ body: (UnsafeMutablePointer<Type>) throws -> ResultType)
+  public func perform<Type, ResultType>(as type: Type.Type,
+                                        _ body: (UnsafeMutablePointer<Type>) throws -> ResultType)
       throws -> ResultType {
     guard let pUnk = UnsafeMutableRawPointer(self.pUnk.borrow) else {
       throw COMError(hr: E_INVALIDARG)
