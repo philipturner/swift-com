@@ -66,15 +66,30 @@ public class ID3D12InfoQueue: IUnknown {
     }
   }
 
-  public func GetMessage(_ MessageIndex: UINT64) throws -> (D3D12_MESSAGE, SIZE_T) {
+  /// Modified binding for `ID3D12InfoQueue::GetMessage`.
+  ///
+  /// DirectX creates a combined memory allocation, with the `D3D12_MESSAGE`
+  /// struct in the first 32 bytes, and the string in the rest. You can
+  /// calculate the total allocation size as 32 + `DescriptionByteLength`.
+  ///
+  /// The caller is responsible for deallocating the pointer. Use `free`
+  /// instead of `UnsafeMutablePointer.deallocate`.
+  public func GetMessage(_ MessageIndex: UINT64) throws -> UnsafeMutablePointer<D3D12_MESSAGE> {
     return try perform(as: WinSDK.ID3D12InfoQueue.self) { pThis in
-      var pMessage: D3D12_MESSAGE = D3D12_MESSAGE()
-      var pMessageByteLength: SIZE_T = SIZE_T()
-      // FIXME(compnerd) GetMessage is also a free function which has a unicode
-      // and ascii version.  As a result, `GetMessage` is a macro which happens
-      // to expand incorrectly to `GetMessageA` here.
-      try CHECKED(pThis.pointee.lpVtbl.pointee.GetMessageA(pThis, MessageIndex, &pMessage, &pMessageByteLength))
-      return (pMessage, pMessageByteLength)
+      // Call the function the first time.
+      var messageByteLength: SIZE_T = SIZE_T()
+      try CHECKED(pThis.pointee.lpVtbl.pointee.GetMessageA(pThis, MessageIndex, nil, &messageByteLength))
+      
+      // Allocate memory, then cast to a non-null, typed pointer.
+      let rawPointer = malloc(Int(messageByteLength))
+      guard let rawPointer else {
+        fatalError("Failed to allocate memory for D3D12_MESSAGE.")
+      }
+      let pMessage = rawPointer.assumingMemoryBound(to: D3D12_MESSAGE.self)
+      
+      // Call the function the second time.
+      try CHECKED(pThis.pointee.lpVtbl.pointee.GetMessageA(pThis, MessageIndex, pMessage, &messageByteLength))
+      return pMessage
     }
   }
 
