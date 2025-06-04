@@ -3,7 +3,7 @@
 
 import WinSDK
 
-public class IDXGISwapChain2: IDXGISwapChain {
+public class IDXGISwapChain2: IDXGISwapChain1 {
   override public class var IID: IID { IID_IDXGISwapChain2 }
 
   public func GetFrameLatencyWaitableObject() throws -> HANDLE? {

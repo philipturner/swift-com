@@ -3,7 +3,7 @@
 
 import WinSDK
 
-public class IDXGISwapChain4: IDXGISwapChain {
+public class IDXGISwapChain4: IDXGISwapChain3 {
   override public class var IID: IID { IID_IDXGISwapChain4 }
 
   public func SetHDRMetaData(_ Type: DXGI_HDR_METADATA_TYPE, _ Size: UINT, _ pMetaData: UnsafeMutableRawPointer?) throws {

@@ -3,7 +3,7 @@
 
 import WinSDK
 
-public class IDXGISwapChain3: IDXGISwapChain {
+public class IDXGISwapChain3: IDXGISwapChain2 {
   override public class var IID: IID { IID_IDXGISwapChain3 }
 
   public func CheckColorSpaceSupport(_ ColorSpace: DXGI_COLOR_SPACE_TYPE) throws -> UINT {
