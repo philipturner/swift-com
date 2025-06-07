@@ -336,6 +336,11 @@ extension ID3D12Device {
     }
   }
 
+  public func CreateComputePipelineState<PSO: IUnknown>(_ Desc: D3D12_COMPUTE_PIPELINE_STATE_DESC) throws -> PSO {
+    var Desc = Desc
+    var iid: IID = PSO.IID
+    return try PSO(pUnk: CreateComputePipelineState(&Desc, &iid))
+  }
 
   public func CreateGraphicsPipelineState<PSO: IUnknown>(_ Desc: D3D12_GRAPHICS_PIPELINE_STATE_DESC) throws -> PSO {
     var Desc = Desc
