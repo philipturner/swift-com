@@ -48,7 +48,7 @@ public class ID3D12Device: ID3D12Object {
     }
   }
 
-  public func CreateCommandSignature(_ pDesc: UnsafePointer<D3D12_COMMAND_SIGNATURE_DESC>?, _ pRootSignature: ID3D12RootSignature, _ riid: REFIID) throws -> UnsafeMutableRawPointer? {
+  public func CreateCommandSignature(_ pDesc: UnsafePointer<D3D12_COMMAND_SIGNATURE_DESC>?, _ pRootSignature: ID3D12RootSignature?, _ riid: REFIID) throws -> UnsafeMutableRawPointer? {
     return try perform(as: WinSDK.ID3D12Device.self) { pThis in
       var pCommandSignature: UnsafeMutableRawPointer?
       try CHECKED(pThis.pointee.lpVtbl.pointee.CreateCommandSignature(pThis, pDesc, RawPointer(pRootSignature), riid, &pCommandSignature))
