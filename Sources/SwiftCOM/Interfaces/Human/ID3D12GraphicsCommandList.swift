@@ -124,7 +124,7 @@ public class ID3D12GraphicsCommandList: ID3D12CommandList {
     }
   }
 
-  public func ExecuteIndirect(_ pCommandSignature: ID3D12CommandSignature, _ MaxCommandCount: UINT, _ pArgumentBuffer: ID3D12Resource, _ ArgumentBufferOffset: UINT64, _ pCountBuffer: ID3D12Resource, _ CountBufferOffset: UINT64) throws {
+  public func ExecuteIndirect(_ pCommandSignature: ID3D12CommandSignature, _ MaxCommandCount: UINT, _ pArgumentBuffer: ID3D12Resource, _ ArgumentBufferOffset: UINT64, _ pCountBuffer: ID3D12Resource?, _ CountBufferOffset: UINT64) throws {
     return try perform(as: WinSDK.ID3D12GraphicsCommandList.self) { pThis in
       pThis.pointee.lpVtbl.pointee.ExecuteIndirect(pThis, RawPointer(pCommandSignature), MaxCommandCount, RawPointer(pArgumentBuffer), ArgumentBufferOffset, RawPointer(pCountBuffer), CountBufferOffset)
     }
